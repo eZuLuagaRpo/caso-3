@@ -1,0 +1,85 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibration Analysis</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'vibrations/style.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light justify-content-between shadowed">
+        <a class="navbar-brand" href=""><img src="{% static 'img/logo.png' %}" height="50px" alt=""></a>
+        <a class="btn btn-primary" href="/logout">Logout</a>
+    </nav>
+
+    <div class="mainContainer">
+        <div class="tools">
+            <h2>Consulta de Datos de Yahoo Finance</h2>
+            <p>Este aplicativo permite consultar datos financieros históricos de empresas como Apple, Microsoft, y
+                otras, desde Yahoo Finance. Proporciona gráficos interactivos con precios de cierre y medias móviles
+                para análisis visual.</p>
+            <form id="consultaForm" onsubmit="event.preventDefault(); obtenerDatos();">
+                <div class="form-group">
+                    <label for="from">From:</label>
+                    <input type="date" class="form-control" id="from" name="from" required>
+                </div>
+                <div class="form-group">
+                    <label for="to">To:</label>
+                    <input type="date" class="form-control" id="to" name="to" required>
+                </div>
+                <div class="form-group">
+                    <label for="brand">Brand:</label>
+                    <select class="form-control" id="brand" name="brand" required>
+                        <option value="" disabled selected>Selecciona una empresa</option>
+                        <option value="AAPL">Apple Inc. (AAPL)</option>
+                        <option value="MSFT">Microsoft Corporation (MSFT)</option>
+                        <option value="AMZN">Amazon.com, Inc. (AMZN)</option>
+                        <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
+                        <option value="META">Meta Platforms, Inc. (META)</option>
+                        <option value="TSLA">Tesla, Inc. (TSLA)</option>
+                        <option value="BRK.B">Berkshire Hathaway Inc. (BRK.B)</option>
+                        <option value="NVDA">NVIDIA Corporation (NVDA)</option>
+                        <option value="V">Visa Inc. (V)</option>
+                        <option value="WMT">Walmart Inc. (WMT)</option>
+                        <option value="KO">The Coca-Cola Company (KO)</option>
+                        <option value="JNJ">Johnson & Johnson (JNJ)</option>
+                        <option value="PG">Procter & Gamble Co. (PG)</option>
+                        <option value="MCD">McDonald's Corporation (MCD)</option>
+                        <option value="PYPL">PayPal Holdings, Inc. (PYPL)</option>
+                        <option value="CRM">Salesforce.com, Inc. (CRM)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+
+        <div class="graph">
+            <div id="afterText">
+                <h4>Información financiera histórica de <span id="brandId"></span></h4>
+            </div>
+            <div id="beforeText" class="text-before">
+                <h4>Realice una búsqueda para iniciar</h4>
+            </div>
+            <canvas id="chart"></canvas>
+            <canvas id="smaChart"></canvas>
+            <div id="analysisResult">
+                <h6>Análisis automatizado:</h6>
+                <p id="analysisResultText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'vibrations/graph.js' %}"></script>
+
+</body>
+
+</html>

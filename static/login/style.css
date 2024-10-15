@@ -1,0 +1,54 @@
+body {
+    margin: 0; padding:0;
+}
+
+.mainContainer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://i.pinimg.com/originals/54/dd/2a/54dd2a6c17f894e233848e18eaa242d9.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    z-index: -99;
+}
+
+.mainContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(8px);
+    z-index: -99;
+}
+
+.mainContainer .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(0, 0, 0, 0.5);
+    z-index: -99;
+}
+
+.login-card {
+    padding: 2em;
+    height: auto;
+    width: auto;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 15px 0px black;
+    border-radius: 1em;
+    margin: auto;
+}
+
+.err-msg {
+    color: rgb(202, 0, 0);
+    font-weight: 600;
+}
