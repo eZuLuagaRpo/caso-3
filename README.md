@@ -1,4 +1,4 @@
-# Caso de Estudio 2: Pruebas de Software
+# Caso de Estudio 3: Pruebas de Software - Django y Testeo web
 
 Este proyecto fue realizado por Camilo Herrera-Arcila, M.Sc. Prohibido todo su uso y distribución sin previa autorización del autor. Para solicitar más información, escriba a [camilo.arcila97@gmail.com](mailto:camilo.arcila97@gmail.com) y su propósito es solamente educativo para la Universidad de San Buenaventura - Medellín en el curso de Pruebas de Software.
 
