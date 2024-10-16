@@ -54,7 +54,7 @@ def getReturns(request):
         stock_data['SMA_5'] = stock_data['Close'].rolling(window=5).mean()
         sma_5 = stock_data['SMA_5'].tolist()
 
-        analysis = analyze_data(closing_prices)
+        analysis = analyze_data(sma_5)
 
         data = {
             'brand': brand,

@@ -4,7 +4,7 @@ function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // El nombre de la cookie debe coincidir con `name`
+
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -14,7 +14,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-let chart;  // Variable global para la gráfica
+let chart;
 
 async function obtenerDatos() {
     const from = document.getElementById('from').value;
@@ -22,13 +22,12 @@ async function obtenerDatos() {
     const brand = document.getElementById('brand').value;
 
     const csrftoken = getCookie('csrftoken');
-    // const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     const response = await fetch("/getReturns", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': csrftoken  // Asegúrate de tener el token CSRF
+            'X-CSRFToken': csrftoken
         },
         body: new URLSearchParams({
             'from': from,
@@ -39,7 +38,7 @@ async function obtenerDatos() {
 
     if (response.ok) {
         const data = await response.json();
-        graficarDatos(data); // Llama a la función para graficar
+        graficarDatos(data);
     } else {
         console.error('Error en la consulta:', response.statusText);
     }
@@ -55,12 +54,10 @@ function graficarDatos(data) {
     const smaValues = data.data.map(item => item.sma_5);
     const ctx = document.getElementById('chart').getContext('2d');
 
-    // Limpiar la gráfica anterior, si existe
     if (chart) {
         chart.destroy();
     }
 
-    // Actualizar gráfica combinada
     chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -72,7 +69,7 @@ function graficarDatos(data) {
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderWidth: 2,
-                    fill: false, // No rellenar debajo de la línea
+                    fill: false,
                 },
                 {
                     label: `Media Móvil Simple (SMA_5) de ${data.brand}`,
@@ -80,7 +77,7 @@ function graficarDatos(data) {
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderWidth: 2,
-                    fill: false, // No rellenar debajo de la línea
+                    fill: false,
                 }
             ]
         },
