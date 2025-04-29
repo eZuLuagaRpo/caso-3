@@ -68,18 +68,14 @@ Los entregables para esta actividad son:
 2. Informe de Allure generado.
 3. Proyecto comprimido en formato ZIP que incluya todas las pruebas en el archivo `tests.py` de Django en la app objetivo.
 
-### Fecha Límite de Entrega
-
-La fecha límite para la entrega de todos los documentos es el domingo 27 de octubre a media noche, en la carpeta `/Entregas/Caso3/apellido_nombre_psoft_caso3.zip`.
-
 ## Rúbricas de Evaluación
 
 La evaluación se realizará con base en los siguientes criterios:
 
-1. **Calidad de las Pruebas (40%):** Cobertura de casos de prueba. Uso adecuado de dobles de prueba. Aplicación de fixtures.
+1. **Calidad de las Pruebas (30%):** Cobertura de casos de prueba. Uso adecuado de dobles de prueba. Aplicación de fixtures.
 
-2. **Informe Escrito (40%):** Claridad y estructura del informe. Detalle de las pruebas y resultados.
+2. **Informe Escrito (60%):** Claridad y estructura del informe. Detalle de las pruebas y resultados.
 
-3. **Informe de Allure (20%):** Complejidad de las pruebas, uso adecuado de metadatos que se muestran en el informe html y corercta integración con Django.
+3. **Informe de Allure (10%):** Complejidad de las pruebas, uso adecuado de metadatos que se muestran en el informe html y corercta integración con Django.
 
 ¡Buena suerte con el caso de estudio! Si tienen alguna pregunta, no duden en preguntar.
