@@ -67,6 +67,7 @@ Los entregables para esta actividad son:
 1. Informe escrito en formato PDF o Word.
 2. Informe de Allure generado.
 3. Proyecto comprimido en formato ZIP que incluya todas las pruebas en el archivo `tests.py` de Django en la app objetivo.
+4. Realice la presentación / sustentación para el caso de estudio.
 
 ## Rúbricas de Evaluación
 
