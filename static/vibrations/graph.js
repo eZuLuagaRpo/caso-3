@@ -49,6 +49,7 @@ function graficarDatos(data) {
     document.getElementById("afterText").style.display = "block"
     document.getElementById("analysisResult").style.display = "block"
     document.getElementById("brandId").innerHTML = data.brand
+
     const labels = data.data.map(item => item.date);
     const closingPrices = data.data.map(item => item.close);
     const smaValues = data.data.map(item => item.sma_5);
@@ -58,6 +59,7 @@ function graficarDatos(data) {
         chart.destroy();
     }
 
+    // Gráfico 1: Precio de cierre + SMA_5
     chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -84,19 +86,8 @@ function graficarDatos(data) {
         options: {
             responsive: true,
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Fecha'
-                    }
-                },
-                y: {
-                    beginAtZero: false,
-                    title: {
-                        display: true,
-                        text: 'Precio (USD)'
-                    }
-                }
+                x: { title: { display: true, text: 'Fecha' }},
+                y: { beginAtZero: false, title: { display: true, text: 'Precio (USD)' }}
             },
             plugins: {
                 tooltip: {
@@ -110,5 +101,146 @@ function graficarDatos(data) {
         }
     });
 
-    document.getElementById("analysisResultText").innerHTML = data.analysis
+    // Gráficos adicionales
+    graficarSMAArea(data);
+    graficarDiferencias(data);
+    graficarSMAvsEMA(data);
+
+    document.getElementById("analysisResultText").innerHTML = data.analysis;
+}
+
+// Gráfico 2: Área bajo la SMA_5
+function graficarSMAArea(data) {
+    const labels = data.data.map(item => item.date);
+    const smaValues = data.data.map(item => item.sma_5);
+    document.getElementById("analysisResult").style.display = "block"
+    const ctx = document.getElementById('smaChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `Evolución de SMA_5 de ${data.brand}`,
+                data: smaValues,
+                backgroundColor: 'rgba(153, 102, 255, 0.4)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Área bajo la SMA_5' }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Fecha' }},
+                y: { title: { display: true, text: 'Precio (USD)' }}
+            }
+        }
+    });
+}
+
+// Gráfico 3: Cambio diario en el precio de cierre
+function graficarDiferencias(data) {
+    const labels = data.data.slice(1).map(item => item.date);
+    const closingPrices = data.data.map(item => item.close);
+    const changes = [];
+
+    for (let i = 1; i < closingPrices.length; i++) {
+        changes.push(closingPrices[i] - closingPrices[i - 1]);
+    }
+
+    const ctx = document.getElementById('diffChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `Cambio Diario del Precio de ${data.brand}`,
+                data: changes,
+                backgroundColor: changes.map(change => change >= 0 ? 'rgba(75, 192, 192, 0.6)' : 'rgba(255, 99, 132, 0.6)'),
+                borderColor: changes.map(change => change >= 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Variaciones Diarias del Precio de Cierre' }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Fecha' }},
+                y: { title: { display: true, text: 'Cambio (USD)' }}
+            }
+        }
+    });
+}
+
+// Gráfico 4: Comparación SMA_5 vs EMA_5
+function calcularEMA(data, window) {
+    let k = 2 / (window + 1);
+    let emaArray = [];
+    let emaPrev = null;
+
+    for (let i = 0; i < data.length; i++) {
+        if (data[i] === null || isNaN(data[i])) {
+            emaArray.push(null);
+            continue;
+        }
+
+        if (emaPrev === null) {
+            emaPrev = data[i];
+        } else {
+            emaPrev = data[i] * k + emaPrev * (1 - k);
+        }
+        emaArray.push(emaPrev);
+    }
+    return emaArray;
+}
+
+function graficarSMAvsEMA(data) {
+    const labels = data.data.map(item => item.date);
+    const sma = data.data.map(item => item.sma_5);
+    const closePrices = data.data.map(item => item.close);
+    const ema = calcularEMA(closePrices, 5);
+    const ctx = document.getElementById('emaChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: `SMA_5 de ${data.brand}`,
+                    data: sma,
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    fill: false,
+                    tension: 0.3
+                },
+                {
+                    label: `EMA_5 de ${data.brand}`,
+                    data: ema,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Comparación entre SMA_5 y EMA_5'
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Fecha' }},
+                y: { title: { display: true, text: 'Precio (USD)' }}
+            }
+        }
+    });
 }
