@@ -1,0 +1,66 @@
+@login_required(login_url='/login')
+def getReturns(request):
+    if request.method == 'POST':
+
+        from_date = request.POST.get('from')
+        to_date = request.POST.get('to')
+        brand = request.POST.get('brand')
+
+        start = datetime.strptime(from_date, '%Y-%m-%d')
+        end = datetime.strptime(to_date, '%Y-%m-%d')
+        
+        stock_data = yf.download(brand, start=start, end=end)
+
+        closing_prices = stock_data['Close'].tolist()
+        dates = stock_data.index.strftime('%Y-%m-%d').tolist()
+
+        stock_data['SMA_5'] = stock_data['Close'].rolling(window=5).mean()
+        sma_5 = stock_data['SMA_5'].tolist()
+
+        analysis = analyze_data(sma_5)
+
+        data = {
+            'brand': brand,
+            'data': [
+                {
+                    'date': date,
+                    'close': price,
+                    'sma_5': sma if not pd.isna(sma) else None
+                } 
+                for date, price, sma in zip(dates, closing_prices, sma_5)
+            ],
+            'analysis': analysis
+        }
+        
+        return JsonResponse(data)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+
+
+
+    Se tuvo que configurar el entorno de pruebas de DJANGO_SETTINGS_MODULE
+
+    se creo el un archivo pytest.ini con lo siguiente
+    [pytest]
+DJANGO_SETTINGS_MODULE = mainApp.settings
+python_files = tests.py test_*.py *_tests.py 
+
+
+BLOCKER:
+test_user_login_post_success: El login exitoso es fundamental para el acceso a la aplicación.
+test_integration_login_get_returns_logout: El flujo completo es crítico para la funcionalidad general.
+CRITICAL:
+test_user_logout: El cierre de sesión es esencial para la seguridad y experiencia del usuario.
+test_home_authenticated: El acceso a la página principal es clave para usuarios autenticados.
+test_get_returns_post_success: Obtener datos correctamente es central para la funcionalidad financiera.
+test_integration_data_processing: La estructura de los datos es crítica para el procesamiento.
+test_get_returns_empty_dataframe: Manejar datos vacíos es crucial para evitar fallos inesperados.
+NORMAL:
+test_user_login_get: Acceso a la página de login es importante pero no crítico si falla.
+test_user_login_post_invalid_credentials: Manejo de credenciales inválidas es secundario al login exitoso.
+test_user_login_post_missing_fields: Campos vacíos son un caso de error común pero no bloqueante.
+test_get_returns_get_method_not_allowed: Rechazo de métodos no permitidos es una validación estándar.
+test_get_returns_parametric: Cubre varios casos, pero son validaciones generales.
+test_get_returns_invalid_data_types: Identifica una mejora, pero no es un fallo crítico inmediato.

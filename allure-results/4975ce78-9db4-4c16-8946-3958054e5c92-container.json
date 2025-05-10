@@ -1,0 +1,1 @@
+{"uuid": "85981b6e-699c-4d79-9f38-e83e9fa614e5", "children": ["307a921b-8d03-426d-bcfd-ff94b1ecaf6c"], "befores": [{"name": "mock_yfinance", "status": "passed", "start": 1746830294879, "stop": 1746830294879}], "start": 1746830294879, "stop": 1746830294934}

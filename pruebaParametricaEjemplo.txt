@@ -1,0 +1,48 @@
+class tiendaOnline:
+    
+    def calcular_precio_final(unidades, precio_unitario, tipo_cliente, promocion):
+        if unidades < 10:
+            descuento_volumen = 0
+        elif unidades < 20:
+            descuento_volumen = 0.10
+        elif unidades < 50:
+            descuento_volumen = 0.20
+        else:
+            descuento_volumen = 0.25
+
+        if tipo_cliente == 'nuevo':
+            descuento_cliente = 0.05
+        elif tipo_cliente == 'VIP':
+            descuento_cliente = 0.10
+        else:
+            descuento_cliente = 0
+
+        precio_final = precio_unitario * unidades
+        precio_final -= precio_final * descuento_volumen
+        precio_final -= precio_final * descuento_cliente
+
+        if promocion:
+            precio_final -= precio_final * 0.15
+
+        return precio_final
+
+
+import pytest
+from modules import tiendaOnline
+
+Datos = [
+    (5, 100, 'nuevo', True, 403.75),
+    (15, 100, 'VIP', False, 1215),
+    (25, 100, 'nuevo', True, 1615),
+    (55, 100, 'VIP', False, 3712.5),
+    (5, 100, 'nuevo', False, 500),
+    (15, 100, 'VIP', True, 1080),
+    (25, 100, 'nuevo', False, 2500),
+    (55, 100, 'VIP', True, 3825)
+]
+
+@pytest.mark.parametrize("unidades, precio_unitario, tipo_cliente, promocion, precio_final", Datos)
+def test_calcular_precio_final(unidades, precio_unitario, tipo_cliente, promocion, precio_final):
+    
+    resultado = tiendaOnline.calcular_precio_final(unidades, precio_unitario, tipo_cliente, promocion)
+    assert resultado == precio_final
