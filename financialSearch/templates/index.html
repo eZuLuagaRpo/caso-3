@@ -69,38 +69,58 @@
             <div id="beforeText" class="text-before">
                 <h4>Realice una búsqueda para iniciar</h4>
             </div>
-            <canvas id="chart"></canvas>
-         
-            <canvas id="smaChart" class="chart-small"></canvas>
-            <canvas id="diffChart" class="chart-small"></canvas>
-            <canvas id="emaChart" class="chart-small"></canvas>
-            <div id="analysisResult">
-                <h6>Análisis automatizado:</h6>
-                <p id="analysisResultText"></p>
+
+            <!-- Sección de Introducción -->
+            <div id="analysisIntro" class="analysis-section">
+                <h5>Análisis Predictivo Financiero</h5>
+                <p>El análisis predictivo financiero es una herramienta fundamental para evaluar la conveniencia de comprar o vender acciones. 
+                Este análisis se basa en el estudio de los precios históricos de cierre y diversos indicadores técnicos para identificar 
+                patrones y tendencias que puedan ayudar en la toma de decisiones de inversión.</p>
+            </div>
+
+            <!-- Sección de Gráficos -->
+            <div id="analysisCharts" class="analysis-section">
+                <h5>Gráficos de Análisis Técnico</h5>
+                <div class="charts-container">
+                    <!-- Fila 1: Gráfico principal grande -->
+                    <div class="chart-row">
+                        <div class="chart-wrapper chart-full">
+                            <h6>Precio de Cierre y Media Móvil Simple (SMA_5)</h6>
+                            <canvas id="chart" class="chart-xlarge"></canvas>
+                        </div>
+                    </div>
+                    <!-- Fila 2: Gráfico de variaciones diarias grande -->
+                    <div class="chart-row">
+                        <div class="chart-wrapper chart-full">
+                            <h6>Variaciones Diarias del Precio</h6>
+                            <canvas id="diffChart" class="chart-xlarge"></canvas>
+                        </div>
+                    </div>
+                    <!-- Fila 3: Dos gráficos pequeños juntos -->
+                    <div class="chart-row chart-row-half">
+                        <div class="chart-wrapper chart-half">
+                            <h6>Evolución de la Media Móvil Simple</h6>
+                            <canvas id="smaChart" class="chart-small"></canvas>
+                        </div>
+                        <div class="chart-wrapper chart-half">
+                            <h6>Comparación SMA vs EMA</h6>
+                            <canvas id="emaChart" class="chart-small"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Conclusiones -->
+            <div id="analysisResult" class="analysis-section">
+                <h5>Conclusiones del Análisis</h5>
+                <div id="analysisResultText" class="conclusion-text"></div>
             </div>
         </div>
     </div>
 
     <script src="{% static 'vibrations/graph.js' %}"></script>
 
-    <style>
-    .chart-large {
-        width: 100%;
-        max-width: 800px;
-        height: 400px;
-        margin-bottom: 30px;
-}
 
-    .chart-small {
-        width: 100%;
-        max-width: 500px;
-        height: 250px;
-        margin-bottom: 30px;
-        top: 100px;
-}
-
-      
-    </style>
 </body>
 
 </html>

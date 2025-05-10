@@ -14,7 +14,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-let chart;
+let chart, smaChartInstance, diffChartInstance, emaChartInstance;
 
 async function obtenerDatos() {
     const from = document.getElementById('from').value;
@@ -45,16 +45,21 @@ async function obtenerDatos() {
 }
 
 function graficarDatos(data) {
-    document.getElementById("beforeText").style.display = "none"
-    document.getElementById("afterText").style.display = "block"
-    document.getElementById("analysisResult").style.display = "block"
-    document.getElementById("brandId").innerHTML = data.brand
+    // Ocultar mensaje inicial y mostrar secciones de análisis
+    document.getElementById("beforeText").style.display = "none";
+    document.getElementById("afterText").style.display = "block";
+    document.getElementById("analysisIntro").style.display = "block";
+    document.getElementById("analysisCharts").style.display = "block";
+    document.getElementById("analysisResult").style.display = "block";
+    document.getElementById("brandId").innerHTML = data.brand;
 
+    // Crear los gráficos
     const labels = data.data.map(item => item.date);
     const closingPrices = data.data.map(item => item.close);
     const smaValues = data.data.map(item => item.sma_5);
+    
+    // Gráfico principal
     const ctx = document.getElementById('chart').getContext('2d');
-
     if (chart) {
         chart.destroy();
     }
@@ -101,22 +106,21 @@ function graficarDatos(data) {
         }
     });
 
-    // Gráficos adicionales
+    // Crear los gráficos adicionales
     graficarSMAArea(data);
     graficarDiferencias(data);
     graficarSMAvsEMA(data);
 
+    // Mostrar el análisis
     document.getElementById("analysisResultText").innerHTML = data.analysis;
 }
 
-// Gráfico 2: Área bajo la SMA_5
 function graficarSMAArea(data) {
     const labels = data.data.map(item => item.date);
     const smaValues = data.data.map(item => item.sma_5);
-    document.getElementById("analysisResult").style.display = "block"
     const ctx = document.getElementById('smaChart').getContext('2d');
-
-    new Chart(ctx, {
+    if (smaChartInstance) smaChartInstance.destroy();
+    smaChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -142,7 +146,6 @@ function graficarSMAArea(data) {
     });
 }
 
-// Gráfico 3: Cambio diario en el precio de cierre
 function graficarDiferencias(data) {
     const labels = data.data.slice(1).map(item => item.date);
     const closingPrices = data.data.map(item => item.close);
@@ -153,8 +156,8 @@ function graficarDiferencias(data) {
     }
 
     const ctx = document.getElementById('diffChart').getContext('2d');
-
-    new Chart(ctx, {
+    if (diffChartInstance) diffChartInstance.destroy();
+    diffChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -179,7 +182,6 @@ function graficarDiferencias(data) {
     });
 }
 
-// Gráfico 4: Comparación SMA_5 vs EMA_5
 function calcularEMA(data, window) {
     let k = 2 / (window + 1);
     let emaArray = [];
@@ -207,8 +209,8 @@ function graficarSMAvsEMA(data) {
     const closePrices = data.data.map(item => item.close);
     const ema = calcularEMA(closePrices, 5);
     const ctx = document.getElementById('emaChart').getContext('2d');
-
-    new Chart(ctx, {
+    if (emaChartInstance) emaChartInstance.destroy();
+    emaChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
