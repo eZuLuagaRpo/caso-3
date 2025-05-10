@@ -70,7 +70,10 @@
                 <h4>Realice una búsqueda para iniciar</h4>
             </div>
             <canvas id="chart"></canvas>
-            <canvas id="smaChart"></canvas>
+         
+            <canvas id="smaChart" class="chart-small"></canvas>
+            <canvas id="diffChart" class="chart-small"></canvas>
+            <canvas id="emaChart" class="chart-small"></canvas>
             <div id="analysisResult">
                 <h6>Análisis automatizado:</h6>
                 <p id="analysisResultText"></p>
@@ -80,6 +83,24 @@
 
     <script src="{% static 'vibrations/graph.js' %}"></script>
 
+    <style>
+    .chart-large {
+        width: 100%;
+        max-width: 800px;
+        height: 400px;
+        margin-bottom: 30px;
+}
+
+    .chart-small {
+        width: 100%;
+        max-width: 500px;
+        height: 250px;
+        margin-bottom: 30px;
+        top: 100px;
+}
+
+      
+    </style>
 </body>
 
 </html>
