@@ -73,9 +73,18 @@
             <!-- Sección de Introducción -->
             <div id="analysisIntro" class="analysis-section">
                 <h5>Análisis Predictivo Financiero</h5>
-                <p>El análisis predictivo financiero es una herramienta fundamental para evaluar la conveniencia de comprar o vender acciones. 
-                Este análisis se basa en el estudio de los precios históricos de cierre y diversos indicadores técnicos para identificar 
-                patrones y tendencias que puedan ayudar en la toma de decisiones de inversión.</p>
+                <p>El análisis predictivo financiero es una herramienta clave para apoyar la toma de decisiones de inversión, 
+                    ya que permite evaluar si es conveniente comprar o vender acciones en un momento determinado. 
+                    Este tipo de análisis se basa principalmente en el estudio de los precios históricos de cierre 
+                    y el uso de indicadores técnicos que ayudan a identificar patrones, 
+                    tendencias y niveles de riesgo en el comportamiento de un activo.
+                
+                    Al analizar estos datos de manera sistemática, se busca anticipar posibles movimientos futuros del mercado, 
+                    lo que permite a los inversionistas tomar decisiones más informadas, 
+                    reducir la incertidumbre y optimizar sus estrategias. 
+                    En el contexto académico, este enfoque representa una forma práctica de aplicar modelos 
+                    cuantitativos al mundo real, combinando teoría financiera con herramientas de análisis de datos 
+                    para comprender mejor cómo se comportan los mercados.</p>
             </div>
 
             <!-- Sección de Gráficos -->
@@ -101,10 +110,19 @@
                         <div class="chart-wrapper chart-half">
                             <h6>Evolución de la Media Móvil Simple</h6>
                             <canvas id="smaChart" class="chart-small"></canvas>
+                            <p>
+                                Esta gráfica muestra cómo ha evolucionado el promedio simple del precio de los últimos 5 días de los precios (SMA_5). 
+                                El área sombreada bajo la línea morada ayuda a visualizar la tendencia del precio a lo largo del tiempo.
+                            </p>
                         </div>
                         <div class="chart-wrapper chart-half">
                             <h6>Comparación SMA vs EMA</h6>
                             <canvas id="emaChart" class="chart-small"></canvas>
+                            <p>
+                                Esta gráfica muestra la SMA_5 (línea naranja), promedio simple de los últimos 5 días, y la EMA_5 (línea azul), promedio exponencial que prioriza precios recientes.
+                                Ambas trazan la tendencia de los precios de cierre a lo largo del tiempo.
+                                Los cruces entre ellas pueden indicar señales de compra (SMA_5 sobre EMA_5) o venta (EMA_5 sobre SMA_5).
+                            </p>
                         </div>
                     </div>
                 </div>
