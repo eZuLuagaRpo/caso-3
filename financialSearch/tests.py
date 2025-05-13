@@ -8,6 +8,7 @@ import pandas as pd
 from datetime import datetime
 from unittest.mock import patch, MagicMock
 import allure
+import numpy as np
 
 # --------------- Fixtures ---------------
 
@@ -44,6 +45,42 @@ def mock_yfinance(monkeypatch):
             return data
 
     monkeypatch.setattr('yfinance.Ticker', lambda x: MockTicker())
+
+@pytest.fixture
+def uptrend_data():
+    """Fixture que proporciona datos simulados con tendencia alcista."""
+    dates = pd.date_range(start='2023-01-01', periods=30).strftime('%Y-%m-%d').tolist()
+    close_prices = [100 + i * 2 for i in range(30)]  # Tendencia alcista
+    sma_5 = [100 + i * 2 for i in range(30)]  # SMA siguiendo la tendencia
+    return {
+        'dates': dates,
+        'close_prices': close_prices,
+        'sma_5': sma_5
+    }
+
+@pytest.fixture
+def downtrend_data():
+    """Fixture que proporciona datos simulados con tendencia bajista."""
+    dates = pd.date_range(start='2023-01-01', periods=30).strftime('%Y-%m-%d').tolist()
+    close_prices = [200 - i * 2 for i in range(30)]  # Tendencia bajista
+    sma_5 = [200 - i * 2 for i in range(30)]  # SMA siguiendo la tendencia
+    return {
+        'dates': dates,
+        'close_prices': close_prices,
+        'sma_5': sma_5
+    }
+
+@pytest.fixture
+def sideways_data():
+    """Fixture que proporciona datos simulados con tendencia lateral."""
+    dates = pd.date_range(start='2023-01-01', periods=30).strftime('%Y-%m-%d').tolist()
+    close_prices = [100 + np.sin(i) * 5 for i in range(30)]  # Movimiento lateral
+    sma_5 = [100 + np.sin(i) * 5 for i in range(30)]  # SMA siguiendo el movimiento
+    return {
+        'dates': dates,
+        'close_prices': close_prices,
+        'sma_5': sma_5
+    }
 
 # --------------- Pruebas Unitarias ---------------
 
@@ -268,3 +305,80 @@ class TestErrorHandlingImprovements:
         data = {'from': '2023-01-01', 'to': '2023-01-05', 'brand': 'AAPL'}
         response = logged_in_client.post('/getReturns', data)
         assert response.status_code == 404
+
+@allure.feature("Análisis de Datos Financieros")
+class TestAnalyzeData:
+    
+    @allure.story("Análisis con Datos de Tendencia Alcista")
+    @allure.title("analyze_data con datos de tendencia alcista genera análisis correcto")
+    @allure.description("Verifica que analyze_data genere un análisis correcto para datos con tendencia alcista clara, incluyendo recomendación de compra.")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_analyze_data_uptrend(self, uptrend_data):
+        analysis = analyze_data(
+            uptrend_data['sma_5'],
+            uptrend_data['dates'],
+            uptrend_data['close_prices']
+        )
+        
+        # Verificar elementos clave del análisis
+        assert "Tendencia de Precios" in analysis
+        assert "positiva" in analysis.lower()
+        assert "alcista" in analysis.lower()
+        assert "señal de compra" in analysis.lower()
+        assert "RSI" in analysis
+        assert "Volatilidad" in analysis
+        assert "condiciones normales" in analysis.lower() or "extremos a considerar" in analysis.lower()
+
+    @allure.story("Análisis con Datos de Tendencia Bajista")
+    @allure.title("analyze_data con datos de tendencia bajista genera análisis correcto")
+    @allure.description("Verifica que analyze_data genere un análisis correcto para datos con tendencia bajista clara, incluyendo recomendación de venta.")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_analyze_data_downtrend(self, downtrend_data):
+        analysis = analyze_data(
+            downtrend_data['sma_5'],
+            downtrend_data['dates'],
+            downtrend_data['close_prices']
+        )
+
+        # Verificar elementos clave del análisis
+        assert "Tendencia de Precios" in analysis
+        assert "negativa" in analysis.lower()
+        assert "bajista" in analysis.lower()
+        assert "señal de venta" in analysis.lower()
+        assert "RSI" in analysis
+        assert "Volatilidad" in analysis
+        assert "condiciones normales" in analysis.lower() or "extremos a considerar" in analysis.lower()
+
+    @allure.story("Análisis con Datos Laterales")
+    @allure.title("analyze_data con datos laterales genera análisis correcto")
+    @allure.description("Verifica que analyze_data genere un análisis correcto para datos con tendencia lateral, incluyendo recomendación de mantener.")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_analyze_data_sideways(self, sideways_data):
+        analysis = analyze_data(
+            sideways_data['sma_5'],
+            sideways_data['dates'],
+            sideways_data['close_prices']
+        )
+        
+        # Verificar elementos clave del análisis
+        assert "Tendencia de Precios" in analysis
+        assert "neutral" in analysis.lower()
+        assert "RSI" in analysis
+        assert "Volatilidad" in analysis
+        assert "condiciones normales" in analysis.lower() or "extremos a considerar" in analysis.lower()
+        assert "estable" in analysis.lower() or "inestable" in analysis.lower()
+
+    @allure.story("Análisis con Datos Insuficientes")
+    @allure.title("analyze_data con datos insuficientes devuelve mensaje apropiado")
+    @allure.description("Verifica que analyze_data devuelva un mensaje apropiado cuando no hay suficientes datos para el análisis.")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_analyze_data_insufficient_data(self):
+        # Datos con menos de 20 días
+        dates = pd.date_range(start='2023-01-01', periods=15).strftime('%Y-%m-%d').tolist()
+        close_prices = [100 + i for i in range(15)]
+        sma_5 = [100 + i for i in range(15)]
+
+        analysis = analyze_data(sma_5, dates, close_prices)
+        
+        assert "No hay suficientes datos" in analysis
+        assert "20 días" in analysis
